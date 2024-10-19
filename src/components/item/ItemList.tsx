@@ -1,9 +1,10 @@
 import React from 'react';
+import {Item} from "./Item";
 
-export  const ItemThing = () => {
+export  const ItemList = () => {
     return (
         <div>
-
+            <Item/>
         </div>
     );
 };

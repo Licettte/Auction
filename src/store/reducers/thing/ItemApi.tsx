@@ -1,66 +1,39 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { baseUrl, LibrariesEndpoints, type Response } from '@/api/api.ts';
-import { BookPageTypes } from '@/modules/user/library/models/BookPageModel.ts';
-import {
-    ActionsParams,
-    addBookResponse,
-    addCoverBookParams,
-    addFileBookParams,
-    addNewBookParams,
-    addNewBookResponse,
-    allScores,
-    ApproveBookParams,
-    Book,
-    bookDownloadedByUserParams,
-    bookWaitingParams,
-    bookWaitingResponse,
-    DeclineBookParams,
-    DeleteFileBookParams,
-    deleteScoreParams,
-    FavoriteParams,
-    FavoriteResponse,
-    ModerationStatus,
-    RentalParams,
-    RentalResponse,
-    RentalResponseEnd,
-    HistoryBook,
-    scoreParams,
-    UpdateBookParams,
-} from '@/store/reducers/libraries/types.ts';
-import { AvailabilityStatuses } from '@/modules/user/library/models/BookCardModel.ts';
+import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 
-export interface BookFilterParams {
-    pageSize: number;
-    pageNumber: number;
-    moderationStatus?: ModerationStatus;
-    availabilityStatuses?: AvailabilityStatuses;
-    minRating?: number;
-    name?: string;
-    genres?: string;
-    action?: string;
-    bookType?: BookPageTypes;
-    languages?: string;
-    userId?: number;
-    bookName?: string;
+export interface Item {
+    "id": number,
+    "name": string,
+    "quality": Quality,
+    "perStack": number,
+    "image": string
 }
 
-export const bookFilterApi = createApi({
+export enum Quality {
+    GREY = 'GREY',
+    WHITE = 'WHITE',
+    GREEN = 'GREEN',
+    BLUE = 'BLUE',
+    PURPLE = 'PURPLE',
+    ORANGE = 'ORANGE'
+}
+
+const baseUrl = `http://176.124.218.238:8080/`;
+
+export const itemApi = createApi({
     reducerPath: 'bookFilterApi',
-    baseQuery: fetchBaseQuery({ baseUrl, credentials: 'include' }),
+    baseQuery: fetchBaseQuery({baseUrl, credentials: 'include'}),
     tagTypes: ['Things'],
     endpoints: (builder) => ({
 
-        getBookById: builder.query<Book, number>({
-            query: (bookId) => ({
-                url: `${LibrariesEndpoints.BOOKS}/${bookId}`,
+        getAllItems: builder.query<Item[], void>({
+            query: () => ({
+                url: `item`,
                 method: 'GET',
             }),
-            transformResponse: (response: Response<Book>) => response.data,
+            transformResponse: (response: Item[]) => response,
             providesTags: ['Things'],
         }),
     }),
 });
 
-export const {
-
-} = bookFilterApi;
+export const {useGetAllItemsQuery} = itemApi;
